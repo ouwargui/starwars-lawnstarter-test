@@ -7,5 +7,11 @@
     --color-background: #ededed;
     --color-green-teal: #0ab463;
     --color-light-gray: #dadada;
-    --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-pinkish-gray: #c4c4c4;
+    --color-warm-gray: #848484;
+    --color-primary: #383838;
+    --color-emerald: #0094ff;
+    --font-sans:
+        'Montserrat', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
