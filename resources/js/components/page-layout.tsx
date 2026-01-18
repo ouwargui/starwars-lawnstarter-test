@@ -6,7 +6,7 @@ export function PageLayout(props: PropsWithChildren) {
             <header className="flex w-full items-center justify-center bg-white inset-ring-1 inset-ring-light-gray">
                 <span className="py-4 text-xl font-bold text-green-teal">SWStarter</span>
             </header>
-            <div className="flex-1">{props.children}</div>
+            <div className="flex-1 flex justify-center">{props.children}</div>
         </div>
     );
 }
