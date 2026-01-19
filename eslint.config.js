@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import reactQuery from '@tanstack/eslint-plugin-query';
 import prettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
 import react from 'eslint-plugin-react';
@@ -10,6 +11,7 @@ import typescript from 'typescript-eslint';
 export default [
     js.configs.recommended,
     ...typescript.configs.recommended,
+    ...reactQuery.configs['flat/recommended'],
     {
         ...react.configs.flat.recommended,
         ...react.configs.flat['jsx-runtime'], // Required for React 17+
