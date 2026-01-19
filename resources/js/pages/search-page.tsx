@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import { Typography } from '@/components/typography';
+import { Divider } from '@/components/ui/divider';
+import { Typography } from '@/components/ui/typography';
 
-export default function Welcome() {
+export default function SearchPage() {
     const [searchType, setSearchType] = useState<'people' | 'movies'>('people');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -31,7 +32,7 @@ export default function Welcome() {
                         What are you searching for?
                     </Typography>
 
-                    <div className="mb-4 flex gap-4 font-bold text-black">
+                    <div className="mb-4 flex gap-4 font-bold flex-wrap">
                         <label className="flex items-center gap-2">
                             <input
                                 type="radio"
@@ -81,11 +82,17 @@ export default function Welcome() {
                 </form>
             </aside>
 
-            <main className="min-w-0 w-full md:w-auto flex-1">
-                <div className="rounded-lg bg-white p-6 shadow-sm">
-                    <h2 className="mb-4 text-lg font-semibold">Results</h2>
-                    <div className="text-gray-600">
-                        There are zero matches. Use the form to search for People or Movie
+            <main className="min-w-0 min-h-auto md:min-h-3/4 w-full md:w-auto flex-1 flex">
+                <div className="rounded-lg bg-white p-6 shadow-sm flex-1 flex flex-col relative">
+                    <div className="flex flex-col gap-2">
+                        <Typography as="h1" preset="heading-primary" className="font-bold">Results</Typography>
+                        <Divider />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <Typography preset="body-default" className="w-max text-center font-bold text-pinkish-gray">
+                            There are zero matches.<br />
+                            Use the form to search for People or Movies.
+                        </Typography>
                     </div>
                 </div>
             </main>
