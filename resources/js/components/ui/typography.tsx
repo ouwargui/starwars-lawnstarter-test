@@ -1,11 +1,14 @@
-import type { ComponentPropsWithoutRef, ElementType } from 'react';
+import { ElementType } from 'react';
 
 import { cn } from '@/lib/utils';
 
-type TypographyProps<T extends ElementType = 'span'> = {
-    as?: T;
+import { PolymorphicComponent, PolymorphicComponentProps } from './polymorphic-component';
+
+const DEFAULT_ELEMENT = 'span' as const;
+
+type TypographyProps<T extends ElementType = typeof DEFAULT_ELEMENT> = {
     preset?: keyof typeof presets;
-} & ComponentPropsWithoutRef<T>;
+} & PolymorphicComponentProps<T>;
 
 const presets = {
     'heading-primary': 'text-lg text-black',
@@ -13,19 +16,16 @@ const presets = {
     'body-default': 'text-sm text-black',
 } as const;
 
-export function Typography<T extends ElementType = 'span'>({
-    as,
+export function Typography<T extends ElementType = typeof DEFAULT_ELEMENT>({
     className,
-    children,
     preset,
+    as,
     ...props
 }: TypographyProps<T>) {
-    const Component = as ?? 'span';
     const presetClass = preset ? presets[preset] : null;
+    const element = as ?? DEFAULT_ELEMENT;
 
     return (
-        <Component className={cn(presetClass, className)} {...props}>
-            {children}
-        </Component>
+        <PolymorphicComponent<ElementType> as={element} className={cn(presetClass, className)} {...props} />
     );
 }
