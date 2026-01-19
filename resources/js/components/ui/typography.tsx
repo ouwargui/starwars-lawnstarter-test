@@ -8,7 +8,7 @@ type TypographyProps<T extends ElementType = 'span'> = {
 } & ComponentPropsWithoutRef<T>;
 
 const presets = {
-    'heading-primary': '',
+    'heading-primary': 'text-lg text-black',
     'heading-secondary': '',
     'body-default': 'text-sm text-black',
 } as const;
