@@ -14,6 +14,7 @@ const presets = {
     'heading-primary': 'text-lg text-black',
     'heading-secondary': '',
     'body-default': 'text-sm text-black',
+    'logo': 'text-xl font-bold text-green-teal',
 } as const;
 
 export function Typography<T extends ElementType = typeof DEFAULT_ELEMENT>({

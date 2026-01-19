@@ -1,8 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('search-page');
-})->name('search');
+Route::get('/', [SearchController::class, 'index'])->name('search');

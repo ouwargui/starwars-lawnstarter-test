@@ -8,14 +8,7 @@ import { Divider } from './ui/divider';
 import { Typography } from './ui/typography';
 
 export function ResultsBox() {
-    const { searchQuery, submittedSearch } = useSearch();
-
-    const hasSearched = submittedSearch !== '';
-    const hasData =
-        searchQuery.isSuccess && searchQuery.data && searchQuery.data.length > 0;
-    const isFetching = searchQuery.isFetching;
-    const isError = searchQuery.isError;
-    const showEmpty = !hasSearched || (searchQuery.isSuccess && !hasData);
+    const { form, results } = useSearch();
 
     return (
         <Box.Root className="flex-1">
@@ -27,15 +20,15 @@ export function ResultsBox() {
             </Box.Header>
 
             <Box.Content className="relative flex-1 flex-col">
-                {isFetching && <EmptyResults>Searching...</EmptyResults>}
+                {form.processing && <EmptyResults>Searching...</EmptyResults>}
 
-                {isError && (
+                {form.hasErrors && (
                     <EmptyResults>
                         An error occurred while searching. See the logs for more details.
                     </EmptyResults>
                 )}
 
-                {showEmpty && !isFetching && !isError && (
+                {!form.processing && !results && !form.hasErrors && (
                     <EmptyResults>
                         There are zero matches.
                         <br />
@@ -43,8 +36,8 @@ export function ResultsBox() {
                     </EmptyResults>
                 )}
 
-                {hasData &&
-                    searchQuery.data.map((result, index) => (
+                {!!results &&
+                    results.map((result, index) => (
                         <div className="flex flex-col gap-4" key={index}>
                             <div className="flex items-center justify-between">
                                 <Typography

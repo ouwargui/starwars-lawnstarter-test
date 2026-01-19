@@ -1,39 +1,25 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { InertiaFormProps, useForm, usePage } from '@inertiajs/react';
+import { createContext, PropsWithChildren, useContext } from 'react';
 
-import { search } from '@/services/search.service';
 
 type SearchContextType = {
-    submittedSearch: string;
-    submittedSearchType: 'people' | 'movies';
-    submitSearch: (search: string, searchType: 'people' | 'movies') => void;
-    searchQuery: UseQueryResult<string[], Error>;
+    filters: { q: string; type: 'people' | 'movies' };
+    results: string[];
+    form: InertiaFormProps<{ q: string; type: 'people' | 'movies' }>
 }
 
 const SearchContext = createContext<SearchContextType | null>(null);
 
 export function SearchProvider(props: PropsWithChildren) {
-    const [submittedSearch, setSubmittedSearch] = useState('');
-    const [submittedSearchType, setSubmittedSearchType] = useState<'people' | 'movies'>('people');
-
-    const submitSearch = (search: string, searchType: 'people' | 'movies') => {
-        setSubmittedSearch(search);
-        setSubmittedSearchType(searchType);
-    };
-
-    const searchQuery = useQuery({
-        queryFn: () => search(submittedSearch, submittedSearchType),
-        queryKey: ['search', submittedSearch, submittedSearchType],
-        enabled: submittedSearch !== '',
-    });
+    const { filters, results } = usePage<{ filters: { q: string; type: 'people' | 'movies' }, results: string[] }>().props;
+    const form = useForm({ q: filters.q, type: filters.type ?? 'people' });
 
     return (
         <SearchContext.Provider
             value={{
-                submittedSearch,
-                submittedSearchType,
-                submitSearch,
-                searchQuery,
+                filters,
+                results,
+                form,
             }}
         >
             {props.children}

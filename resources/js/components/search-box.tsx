@@ -1,6 +1,7 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
 import { useSearch } from '@/contexts/search-context';
+import { search } from '@/routes';
 
 import { Box } from './ui/box';
 import { Button } from './ui/button';
@@ -12,17 +13,12 @@ const PLACEHOLDERS = {
 } as const;
 
 export function SearchBox() {
-    const [searchText, setSearchText] = useState('');
-    const [searchType, setSearchType] = useState<'people' | 'movies'>('people');
-
-    const { submitSearch } = useSearch();
+    const { form } = useSearch();
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        if (!searchText || !searchType) return;
-
-        submitSearch(searchText, searchType);
+        form.submit(search(), { preserveState: true })
     }
 
     return (
@@ -42,8 +38,9 @@ export function SearchBox() {
                     <input
                         type="radio"
                         value="people"
-                        checked={searchType === 'people'}
-                        onChange={(e) => setSearchType(e.target.value as 'people')}
+                        name="type"
+                        checked={form.data.type === 'people'}
+                        onChange={() => form.setData('type', 'people')}
                         className="h-4 w-4 accent-emerald"
                     />
                     <Typography preset="body-default">People</Typography>
@@ -52,8 +49,9 @@ export function SearchBox() {
                     <input
                         type="radio"
                         value="movies"
-                        checked={searchType === 'movies'}
-                        onChange={(e) => setSearchType(e.target.value as 'movies')}
+                        name="type"
+                        checked={form.data.type === 'movies'}
+                        onChange={() => form.setData('type', 'movies')}
                         className="h-4 w-4 accent-emerald"
                     />
                     <Typography preset="body-default">Movies</Typography>
@@ -65,15 +63,17 @@ export function SearchBox() {
                     as="input"
                     preset="body-default"
                     type="text"
-                    placeholder={PLACEHOLDERS[searchType]}
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
+                    name="q"
+                    defaultValue=""
+                    placeholder={PLACEHOLDERS[form.data.type]}
+                    value={form.data.q}
+                    onChange={(e) => form.setData('q', e.target.value)}
                     className="w-full rounded-sm border border-pinkish-gray px-2 py-3 font-bold text-primary placeholder-pinkish-gray transition-colors outline-none focus:border-primary"
                 />
 
                 <Button
                     type="submit"
-                    disabled={!searchText}
+                    disabled={!form.data.q}
                     className="w-full"
                 >
                     <Typography
