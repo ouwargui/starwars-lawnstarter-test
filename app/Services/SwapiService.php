@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Data\Swapi\Movies\GetMovieByIdResponseData;
 use App\Data\Swapi\Movies\MovieSummaryData;
+use App\Data\Swapi\Movies\MovieWithPeopleSummaryData;
 use App\Data\Swapi\Movies\SearchMoviesResponseData;
 use App\Data\Swapi\People\GetPersonByIdResponseData;
 use App\Data\Swapi\People\PersonSummaryData;
+use App\Data\Swapi\People\PersonWithMoviesSummaryData;
 use App\Data\Swapi\People\SearchPeopleResponseData;
 use Illuminate\Http\Client\Batch;
 use Illuminate\Http\Client\PendingRequest;
@@ -46,7 +48,7 @@ class SwapiService
         }
 
         $person = $personResponse->result->properties;
-        $films = $this->getMovieSummaries($person->films);
+        $films = $this->getMoviesSummary($person->films);
 
         return PersonSummaryData::fromPersonAndMovies($person, $films);
     }
@@ -61,6 +63,20 @@ class SwapiService
         return GetMovieByIdResponseData::from($this->get('films/'.$id));
     }
 
+    public function getMovieSummaryData(int $id): MovieSummaryData
+    {
+        $movieResponse = $this->getMovieById($id);
+
+        if (! $movieResponse->result) {
+            throw new NotFoundHttpException('Movie not found.');
+        }
+
+        $movie = $movieResponse->result->properties;
+        $people = $this->getPeopleSummary($movie->characters);
+
+        return MovieSummaryData::fromMovieAndPeople($movie, $people);
+    }
+
     protected function get(string $endpoint, array $query = []): array
     {
         /** @var \Illuminate\Http\Client\Response $response */
@@ -69,10 +85,31 @@ class SwapiService
         return $response->throw()->json();
     }
 
-    protected function getMovieSummaries(array $films): DataCollection
+    protected function getPeopleSummary(array $people): DataCollection
+    {
+        if (empty($people)) {
+            return new DataCollection(PersonSummaryData::class, []);
+        }
+
+        $responses = $this->client->batch(fn (Batch $batch): array => array_map(
+            fn (string $person) => $batch->as($person)->get($person),
+            $people
+        ))->send();
+
+        $summaries = collect($responses)
+            ->map(fn (Response $response) => GetPersonByIdResponseData::from($response->throw()->json()))
+            ->filter(fn (GetPersonByIdResponseData $person) => $person->result !== null)
+            ->map(fn (GetPersonByIdResponseData $person) => MovieWithPeopleSummaryData::fromPersonResultData($person->result))
+            ->values()
+            ->all();
+
+        return new DataCollection(MovieWithPeopleSummaryData::class, $summaries);
+    }
+
+    protected function getMoviesSummary(array $films): DataCollection
     {
         if (empty($films)) {
-            return new DataCollection(MovieSummaryData::class, []);
+            return new DataCollection(PersonWithMoviesSummaryData::class, []);
         }
 
         $responses = $this->client->batch(fn (Batch $batch): array => array_map(
@@ -83,10 +120,10 @@ class SwapiService
         $summaries = collect($responses)
             ->map(fn (Response $response) => GetMovieByIdResponseData::from($response->throw()->json()))
             ->filter(fn (GetMovieByIdResponseData $movie) => $movie->result !== null)
-            ->map(fn (GetMovieByIdResponseData $movie) => MovieSummaryData::fromMovieResultData($movie->result))
+            ->map(fn (GetMovieByIdResponseData $movie) => PersonWithMoviesSummaryData::fromMovieResultData($movie->result))
             ->values()
             ->all();
 
-        return new DataCollection(MovieSummaryData::class, $summaries);
+        return new DataCollection(PersonWithMoviesSummaryData::class, $summaries);
     }
 }

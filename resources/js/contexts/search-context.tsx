@@ -1,22 +1,20 @@
 import { InertiaFormProps, useForm, usePage } from '@inertiajs/react';
 import { createContext, PropsWithChildren, useContext } from 'react';
 
-type SearchResults = {
-    name: string;
-    id: string;
-};
+import { SearchFilters, SearchResults } from '@/interfaces/search';
+
 
 type SearchContextType = {
-    filters?: { q: string; type: 'people' | 'movies' };
+    filters?: SearchFilters;
     results: SearchResults[];
-    form: InertiaFormProps<{ q: string; type: 'people' | 'movies' }>;
+    form: InertiaFormProps<SearchFilters>;
 };
 
 const SearchContext = createContext<SearchContextType | null>(null);
 
 export function SearchProvider(props: PropsWithChildren) {
     const { filters, results } = usePage<{
-        filters: { q: string; type: 'people' | 'movies' };
+        filters: SearchFilters;
         results: SearchResults[];
     }>().props;
     const form = useForm({ q: filters?.q, type: filters?.type ?? 'people' });

@@ -1,29 +1,37 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 import { DetailsBox } from "@/components/details-box";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
-import { movies, search } from "@/routes";
+import { MovieDetails } from "@/interfaces/movie";
+import { people, search } from "@/routes";
 
 export default function MoviesPage() {
+    const { movie } = usePage<{ movie: MovieDetails }>().props;
+
+    console.log(movie);
+
     return (
         <DetailsBox.Root>
-            <DetailsBox.Header>Movie Name</DetailsBox.Header>
+            <DetailsBox.Header>{movie.title}</DetailsBox.Header>
             <DetailsBox.Content>
                 <DetailsBox.Aside>
                     <DetailsBox.AsideHeader>Opening Crawl</DetailsBox.AsideHeader>
                     <DetailsBox.AsideContent>
-                        Gender: Gender<br />
-                        Height: Height<br />
-                        Mass: Mass<br />
+                        {movie.openingCrawl}
                     </DetailsBox.AsideContent>
                 </DetailsBox.Aside>
                 <DetailsBox.Aside>
                     <DetailsBox.AsideHeader>Characters</DetailsBox.AsideHeader>
                     <DetailsBox.AsideContent>
-                        <Link href={movies({ id: 1 })}>return of the jedi</Link><br />
-                        <Link href={movies({ id: 2 })}>return of the jedi</Link><br />
-                        <Link href={movies({ id: 3 })}>return of the jedi</Link><br />
+                        {movie.people.map((person, index) => (
+                            <span key={person.id}>
+                                <Link className="text-emerald hover:underline" href={people({ id: person.id })}>
+                                    {person.name}
+                                </Link>
+                                {index < movie.people.length - 1 ? ", " : null}
+                            </span>
+                        ))}
                     </DetailsBox.AsideContent>
                 </DetailsBox.Aside>
             </DetailsBox.Content>

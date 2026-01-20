@@ -53,7 +53,7 @@ function DetailsBoxAsideHeader(props: PropsWithChildren) {
 
 function DetailsBoxAsideContent(props: PropsWithChildren) {
     return (
-        <Typography as="p" preset="body-default">
+        <Typography as="p" preset="body-default" className="whitespace-pre-line">
             {props.children}
         </Typography>
     );

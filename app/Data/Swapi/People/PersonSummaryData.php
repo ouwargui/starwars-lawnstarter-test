@@ -2,7 +2,6 @@
 
 namespace App\Data\Swapi\People;
 
-use App\Data\Swapi\Movies\MovieSummaryData;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
@@ -17,7 +16,7 @@ final class PersonSummaryDataProperties extends Data
         public string $hairColor,
         public string $height,
         public string $mass,
-        #[DataCollectionOf(MovieSummaryData::class)]
+        #[DataCollectionOf(PersonWithMoviesSummaryData::class)]
         public DataCollection $films,
     ) {}
 }
