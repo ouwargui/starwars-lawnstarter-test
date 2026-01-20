@@ -9,7 +9,6 @@ import { movies, search } from "@/routes";
 export default function PeoplePage() {
     const { person } = usePage<{ person: PersonDetails }>().props;
 
-
     return (
         <DetailsBox.Root>
             <DetailsBox.Header>{person.name}</DetailsBox.Header>
@@ -28,9 +27,14 @@ export default function PeoplePage() {
                 <DetailsBox.Aside>
                     <DetailsBox.AsideHeader>Movies</DetailsBox.AsideHeader>
                     <DetailsBox.AsideContent>
-                        <Link href={movies({ id: 1 })}>return of the jedi</Link><br />
-                        <Link href={movies({ id: 2 })}>return of the jedi</Link><br />
-                        <Link href={movies({ id: 3 })}>return of the jedi</Link><br />
+                        {person.films.map((film, index) => (
+                            <span key={film.id}>
+                                <Link className="text-emerald hover:underline" href={movies({ id: film.id })}>
+                                    {film.title}
+                                </Link>
+                                {index < person.films.length - 1 ? ", " : null}
+                            </span>
+                        ))}
                     </DetailsBox.AsideContent>
                 </DetailsBox.Aside>
             </DetailsBox.Content>

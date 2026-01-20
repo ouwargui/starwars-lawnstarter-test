@@ -1,7 +1,12 @@
+interface FilmSummary {
+    id: number;
+    title: string;
+}
+
 export interface PersonDetails {
     birthYear: string;
     eyeColor: string;
-    films: string[];
+    films: FilmSummary[];
     gender: string;
     hairColor: string;
     height: string;

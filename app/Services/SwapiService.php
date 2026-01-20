@@ -2,11 +2,18 @@
 
 namespace App\Services;
 
+use App\Data\Swapi\Movies\GetMovieByIdResponseData;
+use App\Data\Swapi\Movies\MovieSummaryData;
 use App\Data\Swapi\Movies\SearchMoviesResponseData;
 use App\Data\Swapi\People\GetPersonByIdResponseData;
+use App\Data\Swapi\People\PersonSummaryData;
 use App\Data\Swapi\People\SearchPeopleResponseData;
+use Illuminate\Http\Client\Batch;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Spatie\LaravelData\DataCollection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SwapiService
 {
@@ -30,9 +37,28 @@ class SwapiService
         return GetPersonByIdResponseData::from($this->get('people/'.$id));
     }
 
+    public function getPersonSummaryData(int $id): PersonSummaryData
+    {
+        $personResponse = $this->getPersonById($id);
+
+        if (! $personResponse->result) {
+            throw new NotFoundHttpException('Person not found.');
+        }
+
+        $person = $personResponse->result->properties;
+        $films = $this->getMovieSummaries($person->films);
+
+        return PersonSummaryData::fromPersonAndMovies($person, $films);
+    }
+
     public function searchMovies(?string $q): SearchMoviesResponseData
     {
         return SearchMoviesResponseData::from($this->get('films', ['title' => $q]));
+    }
+
+    public function getMovieById(int $id): GetMovieByIdResponseData
+    {
+        return GetMovieByIdResponseData::from($this->get('films/'.$id));
     }
 
     protected function get(string $endpoint, array $query = []): array
@@ -41,5 +67,26 @@ class SwapiService
         $response = $this->client->get($endpoint, $query);
 
         return $response->throw()->json();
+    }
+
+    protected function getMovieSummaries(array $films): DataCollection
+    {
+        if (empty($films)) {
+            return new DataCollection(MovieSummaryData::class, []);
+        }
+
+        $responses = $this->client->batch(fn (Batch $batch): array => array_map(
+            fn (string $film) => $batch->as($film)->get($film),
+            $films
+        ))->send();
+
+        $summaries = collect($responses)
+            ->map(fn (Response $response) => GetMovieByIdResponseData::from($response->throw()->json()))
+            ->filter(fn (GetMovieByIdResponseData $movie) => $movie->result !== null)
+            ->map(fn (GetMovieByIdResponseData $movie) => MovieSummaryData::fromMovieResultData($movie->result))
+            ->values()
+            ->all();
+
+        return new DataCollection(MovieSummaryData::class, $summaries);
     }
 }
