@@ -2,28 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Swapi\SearchResponseData;
+use App\Services\SwapiService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SearchController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, SwapiService $swapiService)
     {
-        $search = $request->query('q');
-        $type = $request->query('type');
+        $q = $request->input('q');
+        $type = $request->input('type');
 
-        $randomSize = rand(1, 6);
-        $hasSearch = !empty($search);
-        $results = $hasSearch ? collect(range(1, $randomSize))->map(function ($index) {
-            return 'result' . $index;
-        })->toArray() : null;
+        $results = $swapiService->searchPeople(['name' => $q]);
 
-        return Inertia::render('search-page', [
-            'filters' => [
-                'q' => $search,
-                'type' => $type,
-            ],
-            'results' => $results,
-        ]);
+        return Inertia::render('search-page', SearchResponseData::from($results, $q, $type));
     }
 }

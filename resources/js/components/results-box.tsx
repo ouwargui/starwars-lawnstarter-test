@@ -28,7 +28,7 @@ export function ResultsBox() {
                     </EmptyResults>
                 )}
 
-                {!form.processing && !results && !form.hasErrors && (
+                {!form.processing && results.length === 0 && !form.hasErrors && (
                     <EmptyResults>
                         There are zero matches.
                         <br />
@@ -36,29 +36,28 @@ export function ResultsBox() {
                     </EmptyResults>
                 )}
 
-                {!!results &&
-                    results.map((result, index) => (
-                        <div className="flex flex-col gap-4" key={index}>
-                            <div className="flex items-center justify-between">
+                {!form.processing && results.map((result, index) => (
+                    <div className="flex flex-col gap-4" key={index}>
+                        <div className="flex items-center justify-between">
+                            <Typography
+                                as="span"
+                                preset="heading-primary"
+                                className="font-bold"
+                            >
+                                {result.name}
+                            </Typography>
+                            <Button type="button" className="px-3">
                                 <Typography
-                                    as="span"
-                                    preset="heading-primary"
-                                    className="font-bold"
+                                    preset="body-default"
+                                    className="font-bold text-white uppercase"
                                 >
-                                    {result}
+                                    SEE DETAILS
                                 </Typography>
-                                <Button type="button" className="px-3">
-                                    <Typography
-                                        preset="body-default"
-                                        className="font-bold text-white uppercase"
-                                    >
-                                        SEE DETAILS
-                                    </Typography>
-                                </Button>
-                            </div>
-                            <Divider />
+                            </Button>
                         </div>
-                    ))}
+                        <Divider />
+                    </div>
+                ))}
             </Box.Content>
         </Box.Root>
     );

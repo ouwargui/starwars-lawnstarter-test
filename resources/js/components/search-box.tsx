@@ -1,5 +1,3 @@
-import { Fragment } from 'react';
-
 import { useSearch } from '@/contexts/search-context';
 import { search } from '@/routes';
 
@@ -18,7 +16,7 @@ export function SearchBox() {
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        form.submit(search(), { preserveState: true })
+        form.submit(search(), { preserveState: true });
     }
 
     return (
@@ -58,32 +56,26 @@ export function SearchBox() {
                 </label>
             </Box.Content>
 
-            <Box.Footer as={Fragment}>
-                <Typography
-                    as="input"
-                    preset="body-default"
-                    type="text"
-                    name="q"
-                    defaultValue=""
-                    placeholder={PLACEHOLDERS[form.data.type]}
-                    value={form.data.q}
-                    onChange={(e) => form.setData('q', e.target.value)}
-                    className="w-full rounded-sm border border-pinkish-gray px-2 py-3 font-bold text-primary placeholder-pinkish-gray transition-colors outline-none focus:border-primary"
-                />
+            <Typography
+                as="input"
+                preset="body-default"
+                type="text"
+                name="q"
+                defaultValue=""
+                placeholder={PLACEHOLDERS[form.data.type]}
+                value={form.data.q}
+                onChange={(e) => form.setData('q', e.target.value)}
+                className="w-full rounded-sm border border-pinkish-gray px-2 py-3 font-bold text-primary placeholder-pinkish-gray transition-colors outline-none focus:border-primary"
+            />
 
-                <Button
-                    type="submit"
-                    disabled={!form.data.q}
-                    className="w-full"
+            <Button type="submit" disabled={!form.data.q} className="w-full">
+                <Typography
+                    preset="body-default"
+                    className="font-bold text-white uppercase"
                 >
-                    <Typography
-                        preset="body-default"
-                        className="font-bold text-white uppercase"
-                    >
-                        SEARCH
-                    </Typography>
-                </Button>
-            </Box.Footer>
+                    SEARCH
+                </Typography>
+            </Button>
         </Box.Root>
     );
 }
