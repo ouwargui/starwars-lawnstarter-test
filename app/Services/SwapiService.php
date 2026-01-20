@@ -10,9 +10,8 @@ use App\Data\Swapi\People\GetPersonByIdResponseData;
 use App\Data\Swapi\People\PersonSummaryData;
 use App\Data\Swapi\People\PersonWithMoviesSummaryData;
 use App\Data\Swapi\People\SearchPeopleResponseData;
-use Illuminate\Http\Client\Batch;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Spatie\LaravelData\DataCollection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -31,12 +30,20 @@ class SwapiService
 
     public function searchPeople(?string $q): SearchPeopleResponseData
     {
-        return SearchPeopleResponseData::from($this->get('people', ['name' => $q]));
+        $cacheKey = 'search_people:'.$q;
+
+        return Cache::rememberForever($cacheKey, function () use ($q) {
+            return SearchPeopleResponseData::from($this->get('people', ['name' => $q]));
+        });
     }
 
     public function getPersonById(int $id): GetPersonByIdResponseData
     {
-        return GetPersonByIdResponseData::from($this->get('people/'.$id));
+        $cacheKey = 'person:'.$id;
+
+        return Cache::rememberForever($cacheKey, function () use ($id) {
+            return GetPersonByIdResponseData::from($this->get('people/'.$id));
+        });
     }
 
     public function getPersonSummaryData(int $id): PersonSummaryData
@@ -55,12 +62,20 @@ class SwapiService
 
     public function searchMovies(?string $q): SearchMoviesResponseData
     {
-        return SearchMoviesResponseData::from($this->get('films', ['title' => $q]));
+        $cacheKey = 'search_movies:'.$q;
+
+        return Cache::rememberForever($cacheKey, function () use ($q) {
+            return SearchMoviesResponseData::from($this->get('films', ['title' => $q]));
+        });
     }
 
     public function getMovieById(int $id): GetMovieByIdResponseData
     {
-        return GetMovieByIdResponseData::from($this->get('films/'.$id));
+        $cacheKey = 'movie:'.$id;
+
+        return Cache::rememberForever($cacheKey, function () use ($id) {
+            return GetMovieByIdResponseData::from($this->get('films/'.$id));
+        });
     }
 
     public function getMovieSummaryData(int $id): MovieSummaryData
@@ -91,13 +106,10 @@ class SwapiService
             return new DataCollection(PersonSummaryData::class, []);
         }
 
-        $responses = $this->client->batch(fn (Batch $batch): array => array_map(
-            fn (string $person) => $batch->as($person)->get($person),
-            $people
-        ))->send();
-
-        $summaries = collect($responses)
-            ->map(fn (Response $response) => GetPersonByIdResponseData::from($response->throw()->json()))
+        $summaries = collect($people)
+            ->map(fn (string $person) => $this->getIdFromUrl($person))
+            ->filter(fn (?int $id) => $id !== null)
+            ->map(fn (int $id) => $this->getPersonById($id))
             ->filter(fn (GetPersonByIdResponseData $person) => $person->result !== null)
             ->map(fn (GetPersonByIdResponseData $person) => MovieWithPeopleSummaryData::fromPersonResultData($person->result))
             ->values()
@@ -112,18 +124,25 @@ class SwapiService
             return new DataCollection(PersonWithMoviesSummaryData::class, []);
         }
 
-        $responses = $this->client->batch(fn (Batch $batch): array => array_map(
-            fn (string $film) => $batch->as($film)->get($film),
-            $films
-        ))->send();
-
-        $summaries = collect($responses)
-            ->map(fn (Response $response) => GetMovieByIdResponseData::from($response->throw()->json()))
+        $summaries = collect($films)
+            ->map(fn (string $film) => $this->getIdFromUrl($film))
+            ->filter(fn (?int $id) => $id !== null)
+            ->map(fn (int $id) => $this->getMovieById($id))
             ->filter(fn (GetMovieByIdResponseData $movie) => $movie->result !== null)
             ->map(fn (GetMovieByIdResponseData $movie) => PersonWithMoviesSummaryData::fromMovieResultData($movie->result))
             ->values()
             ->all();
 
         return new DataCollection(PersonWithMoviesSummaryData::class, $summaries);
+    }
+
+    protected function getIdFromUrl(string $url): ?int
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+        $path = is_string($path) ? trim($path, '/') : '';
+        $segments = $path === '' ? [] : explode('/', $path);
+        $last = $segments === [] ? null : end($segments);
+
+        return is_string($last) && ctype_digit($last) ? (int) $last : null;
     }
 }
