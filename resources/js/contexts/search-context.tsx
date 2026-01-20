@@ -3,6 +3,7 @@ import { createContext, PropsWithChildren, useContext } from 'react';
 
 type SearchResults = {
     name: string;
+    id: string;
 };
 
 type SearchContextType = {

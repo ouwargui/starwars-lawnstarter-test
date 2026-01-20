@@ -20,16 +20,17 @@ final class SearchResultData extends Data
 {
     public function __construct(
         public string $name,
+        public string $id,
     ) {}
 
     public static function fromPersonResultData(PersonResultData $model): self
     {
-        return new self($model->properties->name);
+        return new self($model->properties->name, $model->uid);
     }
 
     public static function fromMovieResultData(MovieResultData $model): self
     {
-        return new self($model->properties->title);
+        return new self($model->properties->title, $model->uid);
     }
 }
 

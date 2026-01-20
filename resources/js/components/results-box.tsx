@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
 
 import { useSearch } from '@/contexts/search-context';
@@ -36,8 +37,8 @@ export function ResultsBox() {
                     </EmptyResults>
                 )}
 
-                {!form.processing && results.map((result, index) => (
-                    <div className="flex flex-col gap-4" key={index}>
+                {!form.processing && results.map((result) => (
+                    <div className="flex flex-col gap-4" key={result.id}>
                         <div className="flex items-center justify-between">
                             <Typography
                                 as="span"
@@ -46,7 +47,7 @@ export function ResultsBox() {
                             >
                                 {result.name}
                             </Typography>
-                            <Button type="button" className="px-3">
+                            <Button as={Link} className="px-3" href={`/${result.id}`}>
                                 <Typography
                                     preset="body-default"
                                     className="font-bold text-white uppercase"
