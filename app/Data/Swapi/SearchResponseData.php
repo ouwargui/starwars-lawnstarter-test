@@ -2,6 +2,8 @@
 
 namespace App\Data\Swapi;
 
+use App\Data\Swapi\Movies\MovieResultData;
+use App\Data\Swapi\Movies\SearchMoviesResponseData;
 use App\Data\Swapi\People\PersonResultData;
 use App\Data\Swapi\People\SearchPeopleResponseData;
 use Spatie\LaravelData\Data;
@@ -24,19 +26,29 @@ final class SearchResultData extends Data
     {
         return new self($model->properties->name);
     }
+
+    public static function fromMovieResultData(MovieResultData $model): self
+    {
+        return new self($model->properties->title);
+    }
 }
 
 final class SearchResponseData extends Data
 {
     public function __construct(
-        public FilterData $filter,
+        public FilterData $filters,
         public array $results,
     ) {}
+
+    public static function fromFilters(?string $q, ?string $type): self
+    {
+        return new self(new FilterData($q, $type), []);
+    }
 
     public static function fromSearchPeopleResponse(SearchPeopleResponseData $model, ?string $q, ?string $type): self
     {
         if (empty($model->result)) {
-            return new self(new FilterData($q, $type), []);
+            return self::fromFilters($q, $type);
         }
 
         return new self(
@@ -48,10 +60,18 @@ final class SearchResponseData extends Data
         );
     }
 
-    // public static function fromSearchMoviesResponse(SearchMoviesResponseData $model): self
-    // {
-    //     return new self([
-    //         'results' => $model->result->toCollection()->map(fn (MovieResultData $result) => $result->properties->title)->toArray(),
-    //     ]);
-    // }
+    public static function fromSearchMoviesResponse(SearchMoviesResponseData $model, ?string $q, ?string $type): self
+    {
+        if (empty($model->result)) {
+            return self::fromFilters($q, $type);
+        }
+
+        return new self(
+            new FilterData($q, $type),
+            $model->result
+                ->toCollection()
+                ->map(fn (MovieResultData $result) => SearchResultData::from($result))
+                ->toArray()
+        );
+    }
 }

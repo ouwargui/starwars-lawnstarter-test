@@ -61,7 +61,6 @@ export function SearchBox() {
                 preset="body-default"
                 type="text"
                 name="q"
-                defaultValue=""
                 placeholder={PLACEHOLDERS[form.data.type]}
                 value={form.data.q}
                 onChange={(e) => form.setData('q', e.target.value)}

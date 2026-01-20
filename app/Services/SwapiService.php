@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\Swapi\Movies\SearchMoviesResponseData;
 use App\Data\Swapi\People\SearchPeopleResponseData;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
@@ -18,14 +19,14 @@ class SwapiService
             ->acceptJson();
     }
 
-    public function searchPeople(array $query): SearchPeopleResponseData
+    public function searchPeople(?string $q): SearchPeopleResponseData
     {
-        return SearchPeopleResponseData::from($this->get('people', $query));
+        return SearchPeopleResponseData::from($this->get('people', ['name' => $q]));
     }
 
-    public function searchMovies(array $query): array
+    public function searchMovies(?string $q): SearchMoviesResponseData
     {
-        return $this->get('films', $query);
+        return SearchMoviesResponseData::from($this->get('films', ['title' => $q]));
     }
 
     protected function get(string $endpoint, array $query = []): array

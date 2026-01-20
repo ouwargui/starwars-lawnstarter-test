@@ -14,7 +14,10 @@ class SearchController extends Controller
         $q = $request->input('q');
         $type = $request->input('type');
 
-        $results = $swapiService->searchPeople(['name' => $q]);
+        $results = match ($type) {
+            'people' => $swapiService->searchPeople($q),
+            'movies' => $swapiService->searchMovies($q),
+        };
 
         return Inertia::render('search-page', SearchResponseData::from($results, $q, $type));
     }
