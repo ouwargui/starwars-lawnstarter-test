@@ -1,21 +1,28 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 import { DetailsBox } from "@/components/details-box";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { PersonDetails } from "@/interfaces/person";
 import { movies, search } from "@/routes";
 
 export default function PeoplePage() {
+    const { person } = usePage<{ person: PersonDetails }>().props;
+
+
     return (
         <DetailsBox.Root>
-            <DetailsBox.Header>Person Name</DetailsBox.Header>
+            <DetailsBox.Header>{person.name}</DetailsBox.Header>
             <DetailsBox.Content>
                 <DetailsBox.Aside>
                     <DetailsBox.AsideHeader>Details</DetailsBox.AsideHeader>
                     <DetailsBox.AsideContent>
-                        Gender: Gender<br />
-                        Height: Height<br />
-                        Mass: Mass<br />
+                        Birth Year: {person.birthYear}<br />
+                        Gender: {person.gender}<br />
+                        Eye Color: {person.eyeColor}<br />
+                        Hair Color: {person.hairColor}<br />
+                        Height: {person.height}<br />
+                        Mass: {person.mass}<br />
                     </DetailsBox.AsideContent>
                 </DetailsBox.Aside>
                 <DetailsBox.Aside>

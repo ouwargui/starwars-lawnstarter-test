@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\Swapi\Movies\SearchMoviesResponseData;
+use App\Data\Swapi\People\GetPersonByIdResponseData;
 use App\Data\Swapi\People\SearchPeopleResponseData;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
@@ -22,6 +23,11 @@ class SwapiService
     public function searchPeople(?string $q): SearchPeopleResponseData
     {
         return SearchPeopleResponseData::from($this->get('people', ['name' => $q]));
+    }
+
+    public function getPersonById(int $id): GetPersonByIdResponseData
+    {
+        return GetPersonByIdResponseData::from($this->get('people/'.$id));
     }
 
     public function searchMovies(?string $q): SearchMoviesResponseData
