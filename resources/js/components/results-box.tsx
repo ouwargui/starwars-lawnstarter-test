@@ -9,7 +9,7 @@ import { Divider } from './ui/divider';
 import { Typography } from './ui/typography';
 
 export function ResultsBox() {
-    const { form, results } = useSearch();
+    const { form, results, filters } = useSearch();
 
     return (
         <Box.Root className="flex-1">
@@ -47,7 +47,7 @@ export function ResultsBox() {
                             >
                                 {result.name}
                             </Typography>
-                            <Button as={Link} className="px-3" href={`/${result.id}`}>
+                            <Button as={Link} className="px-3" href={`/${filters?.type}/${result.id}`}>
                                 <Typography
                                     preset="body-default"
                                     className="font-bold text-white uppercase"
