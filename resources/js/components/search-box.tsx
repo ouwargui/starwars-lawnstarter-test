@@ -72,7 +72,7 @@ export function SearchBox() {
                     preset="body-default"
                     className="font-bold text-white uppercase"
                 >
-                    SEARCH
+                    {form.processing ? 'SEARCHING...' : 'SEARCH'}
                 </Typography>
             </Button>
         </Box.Root>

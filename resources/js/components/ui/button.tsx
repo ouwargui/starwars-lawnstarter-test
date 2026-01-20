@@ -12,6 +12,6 @@ export function Button<T extends ElementType = typeof DEFAULT_ELEMENT>({ classNa
     const element = as ?? DEFAULT_ELEMENT;
 
     return (
-        <PolymorphicComponent<ElementType> as={element} className={cn("cursor-pointer rounded-full bg-green-teal hover:bg-green-teal-dark py-1 transition-colors disabled:cursor-auto disabled:bg-pinkish-gray", className)} {...props} />
+        <PolymorphicComponent<ElementType> as={element} className={cn("flex items-center justify-center cursor-pointer rounded-full bg-green-teal hover:bg-green-teal-dark py-1 transition-colors disabled:cursor-auto disabled:bg-pinkish-gray", className)} {...props} />
     )
 }
