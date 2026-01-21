@@ -1,0 +1,192 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ResultsBox > should match snapshot when the search has an error 1`] = `
+<div>
+  <div
+    class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4 flex-1"
+  >
+    <div
+      class="flex flex-col gap-2"
+    >
+      <h1
+        class="text-lg text-black font-bold"
+      >
+        Results
+      </h1>
+      <div
+        class="w-full h-px bg-pinkish-gray"
+      />
+    </div>
+    <div
+      class="flex gap-4 relative flex-1 flex-col"
+    >
+      <div
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <span
+          class="text-sm w-max text-center font-bold text-pinkish-gray"
+        >
+          An error occurred while searching. See the logs for more details.
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResultsBox > should match snapshot when the search has empty results 1`] = `
+<div>
+  <div
+    class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4 flex-1"
+  >
+    <div
+      class="flex flex-col gap-2"
+    >
+      <h1
+        class="text-lg text-black font-bold"
+      >
+        Results
+      </h1>
+      <div
+        class="w-full h-px bg-pinkish-gray"
+      />
+    </div>
+    <div
+      class="flex gap-4 relative flex-1 flex-col"
+    >
+      <div
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <span
+          class="text-sm w-max text-center font-bold text-pinkish-gray"
+        >
+          There are zero matches.
+          <br />
+          Use the form to search for People or Movies.
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResultsBox > should match snapshot when the search has results 1`] = `
+<div>
+  <div
+    class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4 flex-1"
+  >
+    <div
+      class="flex flex-col gap-2"
+    >
+      <h1
+        class="text-lg text-black font-bold"
+      >
+        Results
+      </h1>
+      <div
+        class="w-full h-px bg-pinkish-gray"
+      />
+    </div>
+    <div
+      class="flex gap-4 relative flex-1 flex-col"
+    >
+      <div
+        class="flex flex-col gap-4"
+      >
+        <div
+          class="flex items-center justify-between"
+        >
+          <span
+            class="text-lg text-black font-bold"
+          >
+            Luke Skywalker
+          </span>
+          <a
+            class="flex items-center justify-center cursor-pointer rounded-full bg-green-teal hover:bg-green-teal-dark py-1 transition-colors disabled:cursor-auto disabled:bg-pinkish-gray px-3"
+            href="/people/1"
+          >
+            <span
+              class="text-sm font-bold text-white uppercase"
+            >
+              SEE DETAILS
+            </span>
+          </a>
+        </div>
+        <div
+          class="w-full h-px bg-pinkish-gray"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResultsBox > should match snapshot when the search is inactive 1`] = `
+<div>
+  <div
+    class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4 flex-1"
+  >
+    <div
+      class="flex flex-col gap-2"
+    >
+      <h1
+        class="text-lg text-black font-bold"
+      >
+        Results
+      </h1>
+      <div
+        class="w-full h-px bg-pinkish-gray"
+      />
+    </div>
+    <div
+      class="flex gap-4 relative flex-1 flex-col"
+    >
+      <div
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <span
+          class="text-sm w-max text-center font-bold text-pinkish-gray"
+        >
+          There are zero matches.
+          <br />
+          Use the form to search for People or Movies.
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResultsBox > should match snapshot when the search is processing 1`] = `
+<div>
+  <div
+    class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4 flex-1"
+  >
+    <div
+      class="flex flex-col gap-2"
+    >
+      <h1
+        class="text-lg text-black font-bold"
+      >
+        Results
+      </h1>
+      <div
+        class="w-full h-px bg-pinkish-gray"
+      />
+    </div>
+    <div
+      class="flex gap-4 relative flex-1 flex-col"
+    >
+      <div
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <span
+          class="text-sm w-max text-center font-bold text-pinkish-gray"
+        >
+          Searching...
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

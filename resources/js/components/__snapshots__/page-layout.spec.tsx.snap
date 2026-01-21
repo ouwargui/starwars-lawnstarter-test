@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PageLayout > match snapshot 1`] = `
+<div>
+  <div
+    class="flex min-h-screen flex-col gap-4 bg-background"
+  >
+    <header
+      class="flex w-full items-center justify-center bg-white inset-ring-1 inset-ring-light-gray"
+    >
+      <a
+        class="text-xl font-bold text-green-teal py-4"
+        href="/"
+      >
+        SWStarter
+      </a>
+    </header>
+    <div
+      class="flex flex-1 justify-center"
+    />
+  </div>
+</div>
+`;

@@ -1,0 +1,105 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PeoplePage > match snapshot 1`] = `
+<div>
+  <main
+    class="flex flex-1 justify-center items-start px-4 pb-4"
+  >
+    <div
+      class="rounded-lg bg-white p-6 shadow-sm flex flex-col w-full md:max-w-2/3 min-h-full md:min-h-2/3 gap-8"
+    >
+      <div>
+        <h1
+          class="text-lg text-black font-bold"
+        >
+          Luke Skywalker
+        </h1>
+      </div>
+      <div
+        class="flex flex-col md:flex-row md:justify-between w-full gap-12 lg:gap-24"
+      >
+        <div
+          class="flex flex-col gap-1 flex-1"
+        >
+          <div
+            class="flex flex-col gap-2"
+          >
+            <h2
+              class="font-bold"
+            >
+              Details
+            </h2>
+            <div
+              class="w-full h-px bg-pinkish-gray"
+            />
+          </div>
+          <p
+            class="text-sm text-black whitespace-pre-line"
+          >
+            Birth Year: 
+            19BBY
+            <br />
+            Gender: 
+            male
+            <br />
+            Eye Color: 
+            blue
+            <br />
+            Hair Color: 
+            blond
+            <br />
+            Height: 
+            172
+            <br />
+            Mass: 
+            77
+            <br />
+          </p>
+        </div>
+        <div
+          class="flex flex-col gap-1 flex-1"
+        >
+          <div
+            class="flex flex-col gap-2"
+          >
+            <h2
+              class="font-bold"
+            >
+              Movies
+            </h2>
+            <div
+              class="w-full h-px bg-pinkish-gray"
+            />
+          </div>
+          <p
+            class="text-sm text-black whitespace-pre-line"
+          >
+            <span>
+              <a
+                class="text-emerald hover:underline"
+                href="/movies/1"
+              >
+                A New Hope
+              </a>
+            </span>
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex flex-1 w-full"
+      >
+        <a
+          class="flex items-center justify-center cursor-pointer rounded-full bg-green-teal hover:bg-green-teal-dark py-1 transition-colors disabled:cursor-auto disabled:bg-pinkish-gray self-end w-full max-w-md mx-auto md:mx-0 md:w-auto"
+          href="/"
+        >
+          <span
+            class="text-sm font-bold text-white uppercase px-4"
+          >
+            BACK TO SEARCH
+          </span>
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+`;

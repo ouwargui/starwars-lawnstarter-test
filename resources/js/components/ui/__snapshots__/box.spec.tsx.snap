@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Box.Content > match snapshot 1`] = `
+<div>
+  <div
+    class="flex gap-4"
+  />
+</div>
+`;
+
+exports[`Box.Footer > match snapshot 1`] = `
+<div>
+  <div />
+</div>
+`;
+
+exports[`Box.Header > match snapshot 1`] = `
+<div>
+  <div />
+</div>
+`;
+
+exports[`Box.Root > match snapshot 1`] = `
+<div>
+  <div
+    class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4"
+  />
+</div>
+`;

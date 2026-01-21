@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SearchProvider > should render the children 1`] = `
+<div>
+  <div>
+    Test
+  </div>
+</div>
+`;

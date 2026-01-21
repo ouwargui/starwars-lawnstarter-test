@@ -9,8 +9,6 @@ import { people, search } from "@/routes";
 export default function MoviesPage() {
     const { movie } = usePage<{ movie: MovieDetails }>().props;
 
-    console.log(movie);
-
     return (
         <DetailsBox.Root>
             <DetailsBox.Header>{movie.title}</DetailsBox.Header>

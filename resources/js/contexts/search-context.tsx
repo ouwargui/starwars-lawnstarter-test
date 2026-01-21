@@ -1,7 +1,7 @@
 import { InertiaFormProps, useForm, usePage } from '@inertiajs/react';
 import { createContext, PropsWithChildren, useContext } from 'react';
 
-import { SearchFilters, SearchResults } from '@/interfaces/search';
+import { SearchFilters, SearchPageProps, SearchResults } from '@/interfaces/search';
 
 
 type SearchContextType = {
@@ -13,10 +13,7 @@ type SearchContextType = {
 const SearchContext = createContext<SearchContextType | null>(null);
 
 export function SearchProvider(props: PropsWithChildren) {
-    const { filters, results } = usePage<{
-        filters: SearchFilters;
-        results: SearchResults[];
-    }>().props;
+    const { filters, results } = usePage<SearchPageProps>().props;
     const form = useForm({ q: filters?.q, type: filters?.type ?? 'people' });
 
     return (

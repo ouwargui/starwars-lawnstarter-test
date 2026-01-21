@@ -1,0 +1,113 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SearchPage > match snapshot 1`] = `
+<div>
+  <div
+    class="flex w-full max-w-7xl flex-col items-start gap-4 px-4 pb-4 md:flex-row xl:px-32"
+  >
+    <aside
+      class="w-full shrink-0 md:w-80 lg:w-96"
+    >
+      <form
+        class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4"
+      >
+        <div>
+          <h2
+            class="text-sm font-semibold text-primary"
+          >
+            What are you searching for?
+          </h2>
+        </div>
+        <fieldset
+          class="flex gap-4 flex-wrap font-bold"
+        >
+          <label
+            class="flex items-center gap-2"
+          >
+            <input
+              checked=""
+              class="h-4 w-4 accent-emerald"
+              name="type"
+              type="radio"
+              value="people"
+            />
+            <span
+              class="text-sm text-black"
+            >
+              People
+            </span>
+          </label>
+          <label
+            class="flex items-center gap-2"
+          >
+            <input
+              class="h-4 w-4 accent-emerald"
+              name="type"
+              type="radio"
+              value="movies"
+            />
+            <span
+              class="text-sm text-black"
+            >
+              Movies
+            </span>
+          </label>
+        </fieldset>
+        <input
+          class="text-sm w-full rounded-sm border border-pinkish-gray px-2 py-3 font-bold text-primary placeholder-pinkish-gray transition-colors outline-none focus:border-primary"
+          name="q"
+          placeholder="e.g. Chewbacca, Yoda, Boba Fett"
+          type="text"
+          value=""
+        />
+        <button
+          class="flex items-center justify-center cursor-pointer rounded-full bg-green-teal hover:bg-green-teal-dark py-1 transition-colors disabled:cursor-auto disabled:bg-pinkish-gray w-full"
+          disabled=""
+          type="submit"
+        >
+          <span
+            class="text-sm font-bold text-white uppercase"
+          >
+            SEARCH
+          </span>
+        </button>
+      </form>
+    </aside>
+    <main
+      class="flex min-h-auto w-full min-w-0 flex-1 md:min-h-3/4 md:w-auto"
+    >
+      <div
+        class="rounded-lg bg-white p-6 shadow-sm flex flex-col gap-4 flex-1"
+      >
+        <div
+          class="flex flex-col gap-2"
+        >
+          <h1
+            class="text-lg text-black font-bold"
+          >
+            Results
+          </h1>
+          <div
+            class="w-full h-px bg-pinkish-gray"
+          />
+        </div>
+        <div
+          class="flex gap-4 relative flex-1 flex-col"
+        >
+          <div
+            class="absolute inset-0 flex items-center justify-center"
+          >
+            <span
+              class="text-sm w-max text-center font-bold text-pinkish-gray"
+            >
+              There are zero matches.
+              <br />
+              Use the form to search for People or Movies.
+            </span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+`;
