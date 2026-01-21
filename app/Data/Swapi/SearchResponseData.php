@@ -6,6 +6,7 @@ use App\Data\Swapi\Movies\MovieResultData;
 use App\Data\Swapi\Movies\SearchMoviesResponseData;
 use App\Data\Swapi\People\PersonResultData;
 use App\Data\Swapi\People\SearchPeopleResponseData;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
 final class FilterData extends Data
@@ -38,12 +39,13 @@ final class SearchResponseData extends Data
 {
     public function __construct(
         public FilterData $filters,
-        public array $results,
+        /** @var Collection<int, SearchResultData> */
+        public Collection $results,
     ) {}
 
     public static function fromFilters(?string $q, ?string $type): self
     {
-        return new self(new FilterData($q, $type), []);
+        return new self(new FilterData($q, $type), new Collection);
     }
 
     public static function fromSearchPeopleResponse(SearchPeopleResponseData $model, ?string $q, ?string $type): self
@@ -55,9 +57,7 @@ final class SearchResponseData extends Data
         return new self(
             new FilterData($q, $type),
             $model->result
-                ->toCollection()
                 ->map(fn (PersonResultData $result) => SearchResultData::from($result))
-                ->toArray()
         );
     }
 
@@ -70,9 +70,7 @@ final class SearchResponseData extends Data
         return new self(
             new FilterData($q, $type),
             $model->result
-                ->toCollection()
                 ->map(fn (MovieResultData $result) => SearchResultData::from($result))
-                ->toArray()
         );
     }
 }

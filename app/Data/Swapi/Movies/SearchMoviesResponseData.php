@@ -2,9 +2,8 @@
 
 namespace App\Data\Swapi\Movies;
 
-use Spatie\LaravelData\Attributes\DataCollectionOf;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
 
 final class SearchMoviesResponseData extends Data
 {
@@ -12,7 +11,7 @@ final class SearchMoviesResponseData extends Data
         public string $message,
         public string $apiVersion,
         public string $timestamp,
-        #[DataCollectionOf(MovieResultData::class)]
-        public ?DataCollection $result,
+        /** @var Collection<int, MovieResultData> */
+        public Collection $result,
     ) {}
 }

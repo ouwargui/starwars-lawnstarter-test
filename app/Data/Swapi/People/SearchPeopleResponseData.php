@@ -2,9 +2,8 @@
 
 namespace App\Data\Swapi\People;
 
-use Spatie\LaravelData\Attributes\DataCollectionOf;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
 
 final class SearchPeopleResponseData extends Data
 {
@@ -12,7 +11,7 @@ final class SearchPeopleResponseData extends Data
         public string $message,
         public string $apiVersion,
         public string $timestamp,
-        #[DataCollectionOf(PersonResultData::class)]
-        public ?DataCollection $result,
+        /** @var Collection<int, PersonResultData> */
+        public Collection $result,
     ) {}
 }

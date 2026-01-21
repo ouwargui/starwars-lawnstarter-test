@@ -2,7 +2,10 @@
 
 namespace App\Data\Swapi\Movies;
 
+use App\Data\Casts\AsCollection;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
 final class MovieData extends Data
@@ -22,11 +25,21 @@ final class MovieData extends Data
         #[MapInputName('release_date')]
         public string $releaseDate,
 
-        public array $species,
-        public array $starships,
-        public array $vehicles,
-        public array $characters,
-        public array $planets,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $species,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $starships,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $vehicles,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $characters,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $planets,
         public string $url,
         public string $created,
         public string $edited,

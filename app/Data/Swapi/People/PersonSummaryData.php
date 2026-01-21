@@ -2,9 +2,8 @@
 
 namespace App\Data\Swapi\People;
 
-use Spatie\LaravelData\Attributes\DataCollectionOf;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
 
 final class PersonSummaryDataProperties extends Data
 {
@@ -16,8 +15,8 @@ final class PersonSummaryDataProperties extends Data
         public string $hairColor,
         public string $height,
         public string $mass,
-        #[DataCollectionOf(PersonWithMoviesSummaryData::class)]
-        public DataCollection $films,
+        /** @var Collection<int, PersonWithMoviesSummaryData> */
+        public Collection $films,
     ) {}
 }
 
@@ -27,7 +26,7 @@ final class PersonSummaryData extends Data
         public PersonSummaryDataProperties $person,
     ) {}
 
-    public static function fromPersonAndMovies(PersonData $person, DataCollection $films): self
+    public static function fromPersonAndMovies(PersonData $person, Collection $films): self
     {
         return new self(
             new PersonSummaryDataProperties(

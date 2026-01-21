@@ -2,7 +2,10 @@
 
 namespace App\Data\Swapi\People;
 
+use App\Data\Casts\AsCollection;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
 final class PersonData extends Data
@@ -25,10 +28,19 @@ final class PersonData extends Data
         #[MapInputName('skin_color')]
         public string $skinColor,
         public string $homeworld,
-        public array $films,
-        public ?array $species,
-        public ?array $starships,
-        public ?array $vehicles,
+
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $films,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public ?Collection $species,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $starships,
+        /** @var Collection<int, string> */
+        #[WithCast(AsCollection::class)]
+        public Collection $vehicles,
         public string $url,
         public string $created,
         public string $edited,

@@ -3,14 +3,9 @@
 namespace App\Data;
 
 use App\Data\Statistics\CacheStatsData;
-use App\Data\Statistics\DailyRequestData;
-use App\Data\Statistics\EndpointErrorRateData;
 use App\Data\Statistics\HourlyStatData;
-use App\Data\Statistics\QueryStatData;
-use App\Data\Statistics\RefererStatData;
-use App\Data\Statistics\ResourceStatData;
 use Carbon\CarbonImmutable;
-use Spatie\LaravelData\Attributes\DataCollectionOf;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
 /**
@@ -19,8 +14,8 @@ use Spatie\LaravelData\Data;
 final class StatisticsData extends Data
 {
     public function __construct(
-        #[DataCollectionOf(QueryStatData::class)]
-        public readonly array $top_queries,
+        /** @var Collection<int, QueryStatData> */
+        public readonly Collection $top_queries,
 
         public readonly float $average_duration_ms,
 
@@ -28,24 +23,24 @@ final class StatisticsData extends Data
 
         public readonly ?HourlyStatData $peak_hour,
 
-        #[DataCollectionOf(ResourceStatData::class)]
-        public readonly array $top_movies,
+        /** @var Collection<int, ResourceStatData> */
+        public readonly Collection $top_movies,
 
-        #[DataCollectionOf(ResourceStatData::class)]
-        public readonly array $top_characters,
+        /** @var Collection<int, ResourceStatData> */
+        public readonly Collection $top_characters,
 
-        #[DataCollectionOf(RefererStatData::class)]
-        public readonly array $top_referers,
+        /** @var Collection<int, RefererStatData> */
+        public readonly Collection $top_referers,
 
-        #[DataCollectionOf(EndpointErrorRateData::class)]
-        public readonly array $error_rates,
+        /** @var Collection<int, EndpointErrorRateData> */
+        public readonly Collection $error_rates,
 
         public readonly CacheStatsData $cache_stats,
 
         public readonly int $requests_last_24h,
 
-        #[DataCollectionOf(DailyRequestData::class)]
-        public readonly array $daily_breakdown,
+        /** @var Collection<int, DailyRequestData> */
+        public readonly Collection $daily_breakdown,
 
         public readonly ?CarbonImmutable $computed_at,
     ) {}
@@ -56,17 +51,17 @@ final class StatisticsData extends Data
     public static function default(): self
     {
         return new self(
-            top_queries: [],
+            top_queries: new Collection,
             average_duration_ms: 0.0,
             p95_duration_ms: 0.0,
             peak_hour: null,
-            top_movies: [],
-            top_characters: [],
-            top_referers: [],
-            error_rates: [],
+            top_movies: new Collection,
+            top_characters: new Collection,
+            top_referers: new Collection,
+            error_rates: new Collection,
             cache_stats: new CacheStatsData(0, 0, 0, 0.0),
             requests_last_24h: 0,
-            daily_breakdown: [],
+            daily_breakdown: new Collection,
             computed_at: null,
         );
     }

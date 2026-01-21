@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Data\Swapi\Movies\MovieSummaryData;
 use App\Data\Swapi\Movies\MovieWithPeopleSummaryData;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Spatie\LaravelData\DataCollection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -46,21 +46,18 @@ class MoviesService
         return MovieSummaryData::fromMovieAndPeople($movie, $people);
     }
 
-    protected function getPeopleSummary(array $people): DataCollection
+    protected function getPeopleSummary(Collection $people): Collection
     {
-        if (empty($people)) {
-            return new DataCollection(MovieWithPeopleSummaryData::class, []);
+        if ($people->isEmpty()) {
+            return collect();
         }
 
-        $summaries = collect($people)
+        return $people
             ->map(fn (string $person) => $this->client->getIdFromUrl($person))
             ->filter(fn (?int $id) => $id !== null)
             ->map(fn (int $id) => $this->client->getPerson($id))
             ->filter(fn ($person) => $person->result !== null)
             ->map(fn ($person) => MovieWithPeopleSummaryData::fromPersonResultData($person->result))
-            ->values()
-            ->all();
-
-        return new DataCollection(MovieWithPeopleSummaryData::class, $summaries);
+            ->values();
     }
 }

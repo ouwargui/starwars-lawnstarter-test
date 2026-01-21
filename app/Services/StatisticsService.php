@@ -11,6 +11,7 @@ use App\Data\Statistics\RefererStatData;
 use App\Data\Statistics\ResourceStatData;
 use App\Data\StatisticsData;
 use App\Models\RequestLog;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -51,9 +52,9 @@ final class StatisticsService
     /**
      * Get the top 5 search queries with their percentages.
      *
-     * @return array<QueryStatData>
+     * @return Collection<int, QueryStatData>
      */
-    protected function computeTopQueries(): array
+    protected function computeTopQueries(): Collection
     {
         $totalWithQuery = RequestLog::query()
             ->withinDays($this->retentionDays())
@@ -61,7 +62,7 @@ final class StatisticsService
             ->count();
 
         if ($totalWithQuery === 0) {
-            return [];
+            return new Collection;
         }
 
         return RequestLog::query()
@@ -77,7 +78,7 @@ final class StatisticsService
                 count: (int) $row->count,
                 percentage: round(($row->count / $totalWithQuery) * 100, 2),
             ))
-            ->all();
+            ->collect();
     }
 
     /**
@@ -142,9 +143,9 @@ final class StatisticsService
     /**
      * Get the top 5 accessed movies.
      *
-     * @return array<ResourceStatData>
+     * @return Collection<int, ResourceStatData>
      */
-    protected function computeTopMovies(): array
+    protected function computeTopMovies(): Collection
     {
         return RequestLog::query()
             ->withinDays($this->retentionDays())
@@ -161,15 +162,15 @@ final class StatisticsService
                 name: $row->resource_name,
                 count: (int) $row->count,
             ))
-            ->all();
+            ->collect();
     }
 
     /**
      * Get the top 5 accessed characters.
      *
-     * @return array<ResourceStatData>
+     * @return Collection<int,ResourceStatData>
      */
-    protected function computeTopCharacters(): array
+    protected function computeTopCharacters(): Collection
     {
         return RequestLog::query()
             ->withinDays($this->retentionDays())
@@ -186,15 +187,15 @@ final class StatisticsService
                 name: $row->resource_name,
                 count: (int) $row->count,
             ))
-            ->all();
+            ->collect();
     }
 
     /**
      * Get the top 5 referers.
      *
-     * @return array<RefererStatData>
+     * @return Collection<int,RefererStatData>
      */
-    protected function computeTopReferers(): array
+    protected function computeTopReferers(): Collection
     {
         return RequestLog::query()
             ->withinDays($this->retentionDays())
@@ -209,15 +210,15 @@ final class StatisticsService
                 referer: $row->referer,
                 count: (int) $row->count,
             ))
-            ->all();
+            ->collect();
     }
 
     /**
      * Get error rates by endpoint.
      *
-     * @return array<EndpointErrorRateData>
+     * @return Collection<int,EndpointErrorRateData>
      */
-    protected function computeErrorRates(): array
+    protected function computeErrorRates(): Collection
     {
         return RequestLog::query()
             ->withinDays($this->retentionDays())
@@ -236,7 +237,7 @@ final class StatisticsService
                     ? round(($row->error_count / $row->total_requests) * 100, 2)
                     : 0.0,
             ))
-            ->all();
+            ->collect();
     }
 
     /**
@@ -279,9 +280,9 @@ final class StatisticsService
     /**
      * Get daily request counts for the last 30 days.
      *
-     * @return array<DailyRequestData>
+     * @return Collection<int,DailyRequestData>
      */
-    protected function computeDailyBreakdown(): array
+    protected function computeDailyBreakdown(): Collection
     {
         return RequestLog::query()
             ->withinDays($this->retentionDays())
@@ -293,6 +294,6 @@ final class StatisticsService
                 date: $row->date,
                 count: (int) $row->count,
             ))
-            ->all();
+            ->collect();
     }
 }

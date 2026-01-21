@@ -3,17 +3,16 @@
 namespace App\Data\Swapi\Movies;
 
 use App\Data\Swapi\People\PersonWithMoviesSummaryData;
-use Spatie\LaravelData\Attributes\DataCollectionOf;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
 
 final class MovieSummaryDataProperties extends Data
 {
     public function __construct(
         public string $title,
         public string $openingCrawl,
-        #[DataCollectionOf(PersonWithMoviesSummaryData::class)]
-        public DataCollection $people,
+        /** @var Collection<int, PersonWithMoviesSummaryData> */
+        public Collection $people,
     ) {}
 }
 
@@ -23,7 +22,7 @@ final class MovieSummaryData extends Data
         public MovieSummaryDataProperties $movie,
     ) {}
 
-    public static function fromMovieAndPeople(MovieData $movie, DataCollection $people): self
+    public static function fromMovieAndPeople(MovieData $movie, Collection $people): self
     {
         return new self(
             new MovieSummaryDataProperties(
