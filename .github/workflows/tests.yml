@@ -28,11 +28,14 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
-      - name: Setup Node
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
       - name: Install Bun Dependencies
         run: bun install
+
+      - name: Install Playwright
+        run: bunx playwright install
 
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
