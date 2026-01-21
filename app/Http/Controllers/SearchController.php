@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Data\Swapi\SearchResponseData;
-use App\Services\SwapiService;
+use App\Services\SearchService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SearchController extends Controller
 {
-    public function index(Request $request, SwapiService $swapiService)
+    public function __invoke(Request $request, SearchService $searchService)
     {
         $q = $request->input('q');
         $type = $request->input('type');
@@ -18,10 +18,7 @@ class SearchController extends Controller
             return Inertia::render('search-page', SearchResponseData::fromFilters($q, $type));
         }
 
-        $results = match ($type) {
-            'people' => $swapiService->searchPeople($q),
-            'movies' => $swapiService->searchMovies($q),
-        };
+        $results = $searchService->search($q, $type);
 
         return Inertia::render('search-page', SearchResponseData::from($results, $q, $type));
     }

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SwapiService;
+use App\Services\MoviesService;
 use Inertia\Inertia;
 
 class MoviesController extends Controller
 {
-    public function __invoke(int $id, SwapiService $swapiService)
+    public function __invoke(int $id, MoviesService $moviesService)
     {
-        $movie = $swapiService->getMovieSummaryData($id);
+        $movie = $moviesService->getMovieSummaryData($id);
 
         return Inertia::render('movies-page', $movie);
     }

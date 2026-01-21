@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SwapiService;
+use App\Services\PeopleService;
 use Inertia\Inertia;
 
 class PeopleController extends Controller
 {
-    public function __invoke(int $id, SwapiService $swapiService)
+    public function __invoke(int $id, PeopleService $peopleService)
     {
-        $person = $swapiService->getPersonSummaryData($id);
+        $person = $peopleService->getPersonSummaryData($id);
 
         return Inertia::render('people-page', $person);
     }
