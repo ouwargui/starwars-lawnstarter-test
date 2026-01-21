@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['8.4', '8.5']
+        php-version: ["8.4", "8.5"]
 
     steps:
       - name: Checkout
@@ -29,12 +29,10 @@ jobs:
           coverage: xdebug
 
       - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+        uses: oven-sh/setup-bun@v2
 
-      - name: Install Node Dependencies
-        run: npm i
+      - name: Install Bun Dependencies
+        run: bun install
 
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
@@ -46,7 +44,10 @@ jobs:
         run: php artisan key:generate
 
       - name: Build Assets
-        run: npm run build
+        run: bun run build
 
-      - name: Tests
-        run: ./vendor/bin/pest
+      - name: Test PHP
+        run: ./vendor/bin/pest --coverage
+
+      - name: Test Browser
+        run: bun run test:coverage
