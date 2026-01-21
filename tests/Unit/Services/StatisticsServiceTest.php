@@ -1,6 +1,6 @@
 <?php
 
-use App\Data\StatisticsData;
+use App\Data\Statistics\StatisticsData;
 use App\Models\RequestLog;
 use App\Services\StatisticsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -131,10 +131,10 @@ describe('compute', function () {
         $service = new StatisticsService;
         $result = $service->compute();
 
-        expect($result->cache_stats->hits)->toBe(5);
-        expect($result->cache_stats->misses)->toBe(3);
-        expect($result->cache_stats->total)->toBe(8);
-        expect($result->cache_stats->hit_rate)->toBe(62.5);
+        expect($result->swapi_cache_stats->hits)->toBe(5);
+        expect($result->swapi_cache_stats->misses)->toBe(3);
+        expect($result->swapi_cache_stats->total)->toBe(8);
+        expect($result->swapi_cache_stats->hit_rate)->toBe(62.5);
     });
 
     it('computes requests last 24h correctly', function () {

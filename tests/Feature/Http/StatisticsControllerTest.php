@@ -1,6 +1,6 @@
 <?php
 
-use App\Data\StatisticsData;
+use App\Data\Statistics\StatisticsData;
 use App\Jobs\ComputeStatisticsJob;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;

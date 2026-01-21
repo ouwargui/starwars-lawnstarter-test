@@ -9,7 +9,7 @@ use App\Data\Statistics\HourlyStatData;
 use App\Data\Statistics\QueryStatData;
 use App\Data\Statistics\RefererStatData;
 use App\Data\Statistics\ResourceStatData;
-use App\Data\StatisticsData;
+use App\Data\Statistics\StatisticsData;
 use App\Models\RequestLog;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +42,7 @@ final class StatisticsService
             top_characters: $this->computeTopCharacters(),
             top_referers: $this->computeTopReferers(),
             error_rates: $this->computeErrorRates(),
-            cache_stats: $this->computeCacheStats(),
+            swapi_cache_stats: $this->computeCacheStats(),
             requests_last_24h: $this->computeRequestsLast24Hours(),
             daily_breakdown: $this->computeDailyBreakdown(),
             computed_at: now()->toImmutable(),

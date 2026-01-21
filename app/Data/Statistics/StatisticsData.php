@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Data;
+namespace App\Data\Statistics;
 
-use App\Data\Statistics\CacheStatsData;
-use App\Data\Statistics\HourlyStatData;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
@@ -35,7 +33,7 @@ final class StatisticsData extends Data
         /** @var Collection<int, EndpointErrorRateData> */
         public readonly Collection $error_rates,
 
-        public readonly CacheStatsData $cache_stats,
+        public readonly CacheStatsData $swapi_cache_stats,
 
         public readonly int $requests_last_24h,
 
@@ -59,7 +57,7 @@ final class StatisticsData extends Data
             top_characters: new Collection,
             top_referers: new Collection,
             error_rates: new Collection,
-            cache_stats: new CacheStatsData(0, 0, 0, 0.0),
+            swapi_cache_stats: new CacheStatsData(0, 0, 0, 0.0),
             requests_last_24h: 0,
             daily_breakdown: new Collection,
             computed_at: null,

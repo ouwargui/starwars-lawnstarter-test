@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\StatisticsData;
+use App\Data\Statistics\StatisticsData;
 use App\Jobs\ComputeStatisticsJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
