@@ -4,9 +4,13 @@ namespace App\Services;
 
 use App\Data\Swapi\People\PersonSummaryData;
 use App\Data\Swapi\People\PersonWithMoviesSummaryData;
+use Illuminate\Support\Facades\Log;
 use Spatie\LaravelData\DataCollection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Service for fetching and transforming people data from SWAPI.
+ */
 class PeopleService
 {
     public function __construct(
@@ -16,9 +20,12 @@ class PeopleService
 
     public function getPersonSummaryData(int $id): PersonSummaryData
     {
+        Log::info('Fetching person summary', ['id' => $id]);
+
         $personResponse = $this->client->getPerson($id);
 
         if (! $personResponse->result) {
+            Log::warning('Person not found', ['id' => $id]);
             throw new NotFoundHttpException('Person not found.');
         }
 
@@ -29,6 +36,12 @@ class PeopleService
         $this->context->resourceType = 'person';
 
         $films = $this->getMoviesSummary($person->films);
+
+        Log::info('Person summary fetched', [
+            'id' => $id,
+            'name' => $person->name,
+            'films_count' => $films->count(),
+        ]);
 
         return PersonSummaryData::fromPersonAndMovies($person, $films);
     }

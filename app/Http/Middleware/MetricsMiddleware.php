@@ -6,7 +6,9 @@ use App\Models\RequestLog;
 use App\Services\RequestContext;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Middleware that logs request metrics for analytics.
@@ -40,21 +42,36 @@ final class MetricsMiddleware
         $endpoint = $this->resolveEndpoint($request);
         $statusCode = $response->getStatusCode();
 
-        RequestLog::create([
-            'endpoint' => $endpoint,
-            'method' => $request->method(),
-            'query' => $this->extractSearchQuery($request),
-            'search_type' => $request->input('type'),
-            'resource_id' => $this->context->resourceId,
-            'resource_name' => $this->context->resourceName,
-            'referer' => $this->sanitizeReferer($request->header('referer')),
-            'duration_ms' => $durationMs,
-            'status_code' => $statusCode,
-            'swapi_cache_hits' => $this->context->swapiCacheHits,
-            'swapi_cache_misses' => $this->context->swapiCacheMisses,
-            'is_error' => $statusCode >= 400,
-            'created_at' => now(),
-        ]);
+        try {
+            RequestLog::create([
+                'endpoint' => $endpoint,
+                'method' => $request->method(),
+                'query' => $this->extractSearchQuery($request),
+                'search_type' => $request->input('type'),
+                'resource_id' => $this->context->resourceId,
+                'resource_name' => $this->context->resourceName,
+                'referer' => $this->sanitizeReferer($request->header('referer')),
+                'duration_ms' => $durationMs,
+                'status_code' => $statusCode,
+                'swapi_cache_hits' => $this->context->swapiCacheHits,
+                'swapi_cache_misses' => $this->context->swapiCacheMisses,
+                'is_error' => $statusCode >= 400,
+                'created_at' => now(),
+            ]);
+
+            Log::debug('Request metrics logged', [
+                'endpoint' => $endpoint,
+                'duration_ms' => $durationMs,
+                'status_code' => $statusCode,
+                'cache_hits' => $this->context->swapiCacheHits,
+                'cache_misses' => $this->context->swapiCacheMisses,
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Failed to log request metrics', [
+                'endpoint' => $endpoint,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

@@ -20,9 +20,15 @@ use Illuminate\Support\Facades\DB;
  */
 final class StatisticsService
 {
-    private const RETENTION_DAYS = 30;
+    private function retentionDays(): int
+    {
+        return config('statistics.retention_days');
+    }
 
-    private const TOP_LIMIT = 5;
+    private function topLimit(): int
+    {
+        return config('statistics.top_limit');
+    }
 
     public function compute(): StatisticsData
     {
@@ -50,7 +56,7 @@ final class StatisticsService
     protected function computeTopQueries(): array
     {
         $totalWithQuery = RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->withQuery()
             ->count();
 
@@ -59,12 +65,12 @@ final class StatisticsService
         }
 
         return RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->withQuery()
             ->select('query', DB::raw('COUNT(*) as count'))
             ->groupBy('query')
             ->orderByDesc('count')
-            ->limit(self::TOP_LIMIT)
+            ->limit($this->topLimit())
             ->get()
             ->map(fn ($row) => new QueryStatData(
                 query: $row->query,
@@ -80,7 +86,7 @@ final class StatisticsService
     protected function computeAverageDuration(): float
     {
         $average = RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->avg('duration_ms');
 
         return round((float) $average, 2);
@@ -92,7 +98,7 @@ final class StatisticsService
     protected function computeP95Duration(): float
     {
         $count = RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->count();
 
         if ($count === 0) {
@@ -102,7 +108,7 @@ final class StatisticsService
         $offset = (int) floor($count * 0.95);
 
         $p95 = RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->orderBy('duration_ms')
             ->offset(max(0, $offset - 1))
             ->limit(1)
@@ -117,7 +123,7 @@ final class StatisticsService
     protected function computePeakHour(): ?HourlyStatData
     {
         $result = RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->select(DB::raw('CAST(strftime("%H", created_at) AS INTEGER) as hour'), DB::raw('COUNT(*) as count'))
             ->groupBy('hour')
             ->orderByDesc('count')
@@ -141,14 +147,14 @@ final class StatisticsService
     protected function computeTopMovies(): array
     {
         return RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->movies()
             ->whereNotNull('resource_id')
             ->whereNotNull('resource_name')
             ->select('resource_id', 'resource_name', DB::raw('COUNT(*) as count'))
             ->groupBy('resource_id', 'resource_name')
             ->orderByDesc('count')
-            ->limit(self::TOP_LIMIT)
+            ->limit($this->topLimit())
             ->get()
             ->map(fn ($row) => new ResourceStatData(
                 id: (int) $row->resource_id,
@@ -166,14 +172,14 @@ final class StatisticsService
     protected function computeTopCharacters(): array
     {
         return RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->people()
             ->whereNotNull('resource_id')
             ->whereNotNull('resource_name')
             ->select('resource_id', 'resource_name', DB::raw('COUNT(*) as count'))
             ->groupBy('resource_id', 'resource_name')
             ->orderByDesc('count')
-            ->limit(self::TOP_LIMIT)
+            ->limit($this->topLimit())
             ->get()
             ->map(fn ($row) => new ResourceStatData(
                 id: (int) $row->resource_id,
@@ -191,13 +197,13 @@ final class StatisticsService
     protected function computeTopReferers(): array
     {
         return RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->whereNotNull('referer')
             ->where('referer', '!=', '')
             ->select('referer', DB::raw('COUNT(*) as count'))
             ->groupBy('referer')
             ->orderByDesc('count')
-            ->limit(self::TOP_LIMIT)
+            ->limit($this->topLimit())
             ->get()
             ->map(fn ($row) => new RefererStatData(
                 referer: $row->referer,
@@ -214,7 +220,7 @@ final class StatisticsService
     protected function computeErrorRates(): array
     {
         return RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->select(
                 'endpoint',
                 DB::raw('COUNT(*) as total_requests'),
@@ -241,7 +247,7 @@ final class StatisticsService
     protected function computeCacheStats(): CacheStatsData
     {
         $stats = RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->select(
                 DB::raw('SUM(swapi_cache_hits) as hits'),
                 DB::raw('SUM(swapi_cache_misses) as misses')
@@ -278,7 +284,7 @@ final class StatisticsService
     protected function computeDailyBreakdown(): array
     {
         return RequestLog::query()
-            ->withinDays(self::RETENTION_DAYS)
+            ->withinDays($this->retentionDays())
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->orderBy('date')

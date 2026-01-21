@@ -9,7 +9,14 @@ use App\Data\Swapi\People\SearchPeopleResponseData;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Star Wars API (SWAPI).
+ *
+ * Handles all communication with the external SWAPI service including
+ * caching, retry logic, and response transformation to Data objects.
+ */
 class SwapiClient
 {
     protected PendingRequest $client;
@@ -27,6 +34,8 @@ class SwapiClient
     {
         $cacheKey = 'search_people:'.$q;
 
+        Log::debug('Searching people', ['query' => $q]);
+
         return $this->cachedRequest($cacheKey, function () use ($q) {
             return SearchPeopleResponseData::from($this->get('people', ['name' => $q]));
         });
@@ -35,6 +44,8 @@ class SwapiClient
     public function searchMovies(?string $q): SearchMoviesResponseData
     {
         $cacheKey = 'search_movies:'.$q;
+
+        Log::debug('Searching movies', ['query' => $q]);
 
         return $this->cachedRequest($cacheKey, function () use ($q) {
             return SearchMoviesResponseData::from($this->get('films', ['title' => $q]));
@@ -45,6 +56,8 @@ class SwapiClient
     {
         $cacheKey = 'person:'.$id;
 
+        Log::debug('Fetching person', ['id' => $id]);
+
         return $this->cachedRequest($cacheKey, function () use ($id) {
             return GetPersonByIdResponseData::from($this->get('people/'.$id));
         });
@@ -54,11 +67,19 @@ class SwapiClient
     {
         $cacheKey = 'movie:'.$id;
 
+        Log::debug('Fetching movie', ['id' => $id]);
+
         return $this->cachedRequest($cacheKey, function () use ($id) {
             return GetMovieByIdResponseData::from($this->get('films/'.$id));
         });
     }
 
+    /**
+     * Extract the numeric ID from a SWAPI resource URL.
+     *
+     * @example getIdFromUrl('https://swapi.tech/api/people/1') returns 1
+     * @example getIdFromUrl('https://swapi.tech/api/films/4/') returns 4
+     */
     public function getIdFromUrl(string $url): ?int
     {
         $path = parse_url($url, PHP_URL_PATH);
@@ -79,10 +100,14 @@ class SwapiClient
      */
     protected function cachedRequest(string $cacheKey, callable $callback): mixed
     {
-        if (Cache::has($cacheKey)) {
+        $cached = Cache::has($cacheKey);
+
+        if ($cached) {
             $this->context->recordCacheHit();
+            Log::debug('SWAPI cache hit', ['key' => $cacheKey]);
         } else {
             $this->context->recordCacheMiss();
+            Log::debug('SWAPI cache miss', ['key' => $cacheKey]);
         }
 
         return Cache::rememberForever($cacheKey, $callback);
@@ -90,6 +115,8 @@ class SwapiClient
 
     protected function get(string $endpoint, array $query = []): array
     {
+        Log::debug('SWAPI request', ['endpoint' => $endpoint, 'query' => $query]);
+
         /** @var \Illuminate\Http\Client\Response $response */
         $response = $this->client->get($endpoint, $query);
 
