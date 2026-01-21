@@ -1,11 +1,33 @@
 <?php
 
 use App\Data\Statistics\StatisticsData;
+use App\Jobs\ComputeStatisticsJob;
 use App\Models\RequestLog;
 use App\Services\StatisticsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 
 uses(RefreshDatabase::class);
+
+describe('getStatistics', function () {
+    it('returns default statistics when no data is cached', function () {
+        $service = new StatisticsService;
+        $result = $service->getStatistics();
+        expect($result)->toBeInstanceOf(StatisticsData::class);
+        expect($result->top_queries)->toBeEmpty();
+        expect($result->average_duration_ms)->toBe(0.0);
+        expect($result->p95_duration_ms)->toBe(0.0);
+        expect($result->peak_hour)->toBeNull();
+    });
+
+    it('returns cached statistics when available', function () {
+        $service = new StatisticsService;
+        $statistics = StatisticsData::default();
+        Cache::forever(ComputeStatisticsJob::CACHE_KEY, $statistics);
+        $result = $service->getStatistics();
+        expect($result)->toBe($statistics);
+    });
+});
 
 describe('compute', function () {
     it('returns StatisticsData instance', function () {
@@ -21,12 +43,12 @@ describe('compute', function () {
 
         $result = $service->compute();
 
-        expect($result->top_queries)->toBe([]);
+        expect($result->top_queries)->toBeEmpty();
         expect($result->average_duration_ms)->toBe(0.0);
         expect($result->p95_duration_ms)->toBe(0.0);
         expect($result->peak_hour)->toBeNull();
-        expect($result->top_movies)->toBe([]);
-        expect($result->top_characters)->toBe([]);
+        expect($result->top_movies)->toBeEmpty();
+        expect($result->top_characters)->toBeEmpty();
         expect($result->requests_last_24h)->toBe(0);
     });
 

@@ -90,7 +90,7 @@ describe('ComputeStatisticsJob', function () {
 
         $cached = Cache::get(ComputeStatisticsJob::CACHE_KEY);
 
-        expect($cached->cache_stats->hits)->toBe(5);
-        expect($cached->cache_stats->misses)->toBe(2);
+        expect($cached->swapi_cache_stats->hits)->toBe(5);
+        expect($cached->swapi_cache_stats->misses)->toBe(2);
     });
 });

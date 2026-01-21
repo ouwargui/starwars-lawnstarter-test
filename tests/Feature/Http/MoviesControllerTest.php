@@ -5,6 +5,9 @@ use Tests\TestCase;
 
 beforeEach(function () {
     Http::preventStrayRequests();
+    Http::fake([
+        '127.0.0.1:*/render' => Http::response(['head' => [], 'body' => '']),
+    ]);
 });
 
 describe('movies page', function () {
