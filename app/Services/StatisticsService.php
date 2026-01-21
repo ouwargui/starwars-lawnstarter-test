@@ -10,8 +10,10 @@ use App\Data\Statistics\QueryStatData;
 use App\Data\Statistics\RefererStatData;
 use App\Data\Statistics\ResourceStatData;
 use App\Data\Statistics\StatisticsData;
+use App\Jobs\ComputeStatisticsJob;
 use App\Models\RequestLog;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -29,6 +31,11 @@ final class StatisticsService
     private function topLimit(): int
     {
         return config('statistics.top_limit');
+    }
+
+    public function getStatistics(): StatisticsData
+    {
+        return Cache::get(ComputeStatisticsJob::CACHE_KEY, StatisticsData::default());
     }
 
     public function compute(): StatisticsData

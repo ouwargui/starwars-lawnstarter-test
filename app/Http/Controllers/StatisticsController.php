@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\Statistics\StatisticsData;
-use App\Jobs\ComputeStatisticsJob;
+use App\Services\StatisticsService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
 
 final class StatisticsController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(StatisticsService $statisticsService): JsonResponse
     {
-        $statistics = Cache::get(ComputeStatisticsJob::CACHE_KEY);
-
-        if ($statistics === null) {
-            return response()->json(StatisticsData::default());
-        }
-
-        return response()->json($statistics);
+        return response()
+            ->json($statisticsService->getStatistics());
     }
 }
