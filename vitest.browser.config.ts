@@ -12,6 +12,13 @@ export default defineConfig({
     }
   },
   test: {
+    coverage: {
+        provider: 'v8',
+        exclude: [
+            'resources/js/wayfinder/**',
+            'resources/js/routes/**',
+        ]
+    },
     browser: {
       enabled: true,
       provider: playwright(),
