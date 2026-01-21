@@ -11,6 +11,7 @@ class PeopleService
 {
     public function __construct(
         protected SwapiClient $client,
+        protected RequestContext $context,
     ) {}
 
     public function getPersonSummaryData(int $id): PersonSummaryData
@@ -22,6 +23,11 @@ class PeopleService
         }
 
         $person = $personResponse->result->properties;
+
+        $this->context->resourceId = $id;
+        $this->context->resourceName = $person->name;
+        $this->context->resourceType = 'person';
+
         $films = $this->getMoviesSummary($person->films);
 
         return PersonSummaryData::fromPersonAndMovies($person, $films);

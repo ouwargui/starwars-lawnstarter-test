@@ -14,8 +14,9 @@ class SwapiClient
 {
     protected PendingRequest $client;
 
-    public function __construct()
-    {
+    public function __construct(
+        protected RequestContext $context,
+    ) {
         $this->client = Http::baseUrl(config('services.swapi.base_url'))
             ->timeout(config('services.swapi.timeout'))
             ->retry(config('services.swapi.retry_attempts'), config('services.swapi.retry_delay'))
@@ -26,7 +27,7 @@ class SwapiClient
     {
         $cacheKey = 'search_people:'.$q;
 
-        return Cache::rememberForever($cacheKey, function () use ($q) {
+        return $this->cachedRequest($cacheKey, function () use ($q) {
             return SearchPeopleResponseData::from($this->get('people', ['name' => $q]));
         });
     }
@@ -35,7 +36,7 @@ class SwapiClient
     {
         $cacheKey = 'search_movies:'.$q;
 
-        return Cache::rememberForever($cacheKey, function () use ($q) {
+        return $this->cachedRequest($cacheKey, function () use ($q) {
             return SearchMoviesResponseData::from($this->get('films', ['title' => $q]));
         });
     }
@@ -44,7 +45,7 @@ class SwapiClient
     {
         $cacheKey = 'person:'.$id;
 
-        return Cache::rememberForever($cacheKey, function () use ($id) {
+        return $this->cachedRequest($cacheKey, function () use ($id) {
             return GetPersonByIdResponseData::from($this->get('people/'.$id));
         });
     }
@@ -53,7 +54,7 @@ class SwapiClient
     {
         $cacheKey = 'movie:'.$id;
 
-        return Cache::rememberForever($cacheKey, function () use ($id) {
+        return $this->cachedRequest($cacheKey, function () use ($id) {
             return GetMovieByIdResponseData::from($this->get('films/'.$id));
         });
     }
@@ -66,6 +67,25 @@ class SwapiClient
         $last = $segments === [] ? null : end($segments);
 
         return is_string($last) && ctype_digit($last) ? (int) $last : null;
+    }
+
+    /**
+     * Execute a cached request while tracking SWAPI cache hits/misses.
+     *
+     * @template T
+     *
+     * @param  callable(): T  $callback
+     * @return T
+     */
+    protected function cachedRequest(string $cacheKey, callable $callback): mixed
+    {
+        if (Cache::has($cacheKey)) {
+            $this->context->recordCacheHit();
+        } else {
+            $this->context->recordCacheMiss();
+        }
+
+        return Cache::rememberForever($cacheKey, $callback);
     }
 
     protected function get(string $endpoint, array $query = []): array

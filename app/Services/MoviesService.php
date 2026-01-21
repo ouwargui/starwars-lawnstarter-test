@@ -11,6 +11,7 @@ class MoviesService
 {
     public function __construct(
         protected SwapiClient $client,
+        protected RequestContext $context,
     ) {}
 
     public function getMovieSummaryData(int $id): MovieSummaryData
@@ -22,6 +23,11 @@ class MoviesService
         }
 
         $movie = $movieResponse->result->properties;
+
+        $this->context->resourceId = $id;
+        $this->context->resourceName = $movie->title;
+        $this->context->resourceType = 'movie';
+
         $people = $this->getPeopleSummary($movie->characters);
 
         return MovieSummaryData::fromMovieAndPeople($movie, $people);
