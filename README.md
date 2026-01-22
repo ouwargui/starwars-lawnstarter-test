@@ -1,4 +1,12 @@
-# SWStarter
+<div align="center">
+  <h1>SWStarter</h1>
+  <a href="https://github.com/ouwargui/starwars-lawnstarter-test/actions/workflows/lint.yml">
+    <img src="https://github.com/ouwargui/starwars-lawnstarter-test/actions/workflows/lint.yml/badge.svg?branch=main" alt="linter">
+  </a>
+  <a href="https://github.com/ouwargui/starwars-lawnstarter-test/actions/workflows/tests.yml">
+    <img src="https://github.com/ouwargui/starwars-lawnstarter-test/actions/workflows/tests.yml/badge.svg?branch=main" alt="tests">
+  </a>
+</div>
 
 ## Run the application
 
