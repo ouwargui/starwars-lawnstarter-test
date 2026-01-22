@@ -1,11 +1,11 @@
-import { InertiaFormProps } from "@inertiajs/react";
-import { beforeEach, describe, it, vi } from "vitest";
-import { render } from "vitest-browser-react";
+import { InertiaFormProps } from '@inertiajs/react';
+import { beforeEach, describe, it, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
 
-import { useSearch } from "@/contexts/search-context";
-import { SearchFilters } from "@/interfaces/search";
+import { useSearch } from '@/contexts/search-context';
+import { SearchFilters } from '@/interfaces/search';
 
-import { ResultsBox } from "./results-box";
+import { ResultsBox } from './results-box';
 
 vi.mock('@/contexts/search-context');
 
@@ -48,29 +48,29 @@ describe('ResultsBox', () => {
         vi.mocked(useSearch).mockReturnValue(inactiveSearchMock);
         const { container } = await render(<ResultsBox />);
         expect(container).toMatchSnapshot();
-    })
+    });
 
     it('should match snapshot when the search is processing', async ({ expect }) => {
         vi.mocked(useSearch).mockReturnValue(searchProcessingMock);
         const { container } = await render(<ResultsBox />);
         expect(container).toMatchSnapshot();
-    })
+    });
 
     it('should match snapshot when the search has empty results', async ({ expect }) => {
         vi.mocked(useSearch).mockReturnValue(emptyResultsMock);
         const { container } = await render(<ResultsBox />);
         expect(container).toMatchSnapshot();
-    })
+    });
 
     it('should match snapshot when the search has results', async ({ expect }) => {
         vi.mocked(useSearch).mockReturnValue(resultsMock);
         const { container } = await render(<ResultsBox />);
         expect(container).toMatchSnapshot();
-    })
+    });
 
     it('should match snapshot when the search has an error', async ({ expect }) => {
         vi.mocked(useSearch).mockReturnValue(errorSearchMock);
         const { container } = await render(<ResultsBox />);
         expect(container).toMatchSnapshot();
-    })
+    });
 });

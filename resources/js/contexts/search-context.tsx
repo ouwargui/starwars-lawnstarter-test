@@ -3,7 +3,6 @@ import { createContext, PropsWithChildren, useContext } from 'react';
 
 import { SearchFilters, SearchPageProps, SearchResults } from '@/interfaces/search';
 
-
 type SearchContextType = {
     filters?: SearchFilters;
     results: SearchResults[];

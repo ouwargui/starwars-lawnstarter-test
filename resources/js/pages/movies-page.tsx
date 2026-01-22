@@ -1,10 +1,10 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage } from '@inertiajs/react';
 
-import { DetailsBox } from "@/components/details-box";
-import { Button } from "@/components/ui/button";
-import { Typography } from "@/components/ui/typography";
-import { MovieDetails } from "@/interfaces/movie";
-import { people, search } from "@/routes";
+import { DetailsBox } from '@/components/details-box';
+import { Button } from '@/components/ui/button';
+import { Typography } from '@/components/ui/typography';
+import { MovieDetails } from '@/interfaces/movie';
+import { people, search } from '@/routes';
 
 export default function MoviesPage() {
     const { movie } = usePage<{ movie: MovieDetails }>().props;
@@ -24,18 +24,30 @@ export default function MoviesPage() {
                     <DetailsBox.AsideContent>
                         {movie.people.map((person, index) => (
                             <span key={person.id}>
-                                <Link className="text-emerald hover:underline" href={people({ id: person.id })}>
+                                <Link
+                                    className="text-emerald hover:underline"
+                                    href={people({ id: person.id })}
+                                >
                                     {person.name}
                                 </Link>
-                                {index < movie.people.length - 1 ? ", " : null}
+                                {index < movie.people.length - 1 ? ', ' : null}
                             </span>
                         ))}
                     </DetailsBox.AsideContent>
                 </DetailsBox.Aside>
             </DetailsBox.Content>
             <DetailsBox.Footer>
-                <Button as={Link} href={search()} className="self-end w-full max-w-md mx-auto md:mx-0 md:w-auto">
-                    <Typography preset="body-default" className="font-bold text-white uppercase px-4">BACK TO SEARCH</Typography>
+                <Button
+                    as={Link}
+                    href={search()}
+                    className="mx-auto w-full max-w-md self-end md:mx-0 md:w-auto"
+                >
+                    <Typography
+                        preset="body-default"
+                        className="px-4 font-bold text-white uppercase"
+                    >
+                        BACK TO SEARCH
+                    </Typography>
                 </Button>
             </DetailsBox.Footer>
         </DetailsBox.Root>

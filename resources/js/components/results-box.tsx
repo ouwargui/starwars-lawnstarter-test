@@ -37,28 +37,33 @@ export function ResultsBox() {
                     </EmptyResults>
                 )}
 
-                {!form.processing && results.map((result) => (
-                    <div className="flex flex-col gap-4" key={result.id}>
-                        <div className="flex items-center justify-between">
-                            <Typography
-                                as="span"
-                                preset="heading-primary"
-                                className="font-bold"
-                            >
-                                {result.name}
-                            </Typography>
-                            <Button as={Link} className="px-3" href={`/${filters?.type}/${result.id}`}>
+                {!form.processing &&
+                    results.map((result) => (
+                        <div className="flex flex-col gap-4" key={result.id}>
+                            <div className="flex items-center justify-between">
                                 <Typography
-                                    preset="body-default"
-                                    className="font-bold text-white uppercase"
+                                    as="span"
+                                    preset="heading-primary"
+                                    className="font-bold"
                                 >
-                                    SEE DETAILS
+                                    {result.name}
                                 </Typography>
-                            </Button>
+                                <Button
+                                    as={Link}
+                                    className="px-3"
+                                    href={`/${filters?.type}/${result.id}`}
+                                >
+                                    <Typography
+                                        preset="body-default"
+                                        className="font-bold text-white uppercase"
+                                    >
+                                        SEE DETAILS
+                                    </Typography>
+                                </Button>
+                            </div>
+                            <Divider />
                         </div>
-                        <Divider />
-                    </div>
-                ))}
+                    ))}
             </Box.Content>
         </Box.Root>
     );

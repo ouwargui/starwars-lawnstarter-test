@@ -1,13 +1,13 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren } from 'react';
 
-import { Box } from "./ui/box";
-import { Divider } from "./ui/divider";
-import { Typography } from "./ui/typography";
+import { Box } from './ui/box';
+import { Divider } from './ui/divider';
+import { Typography } from './ui/typography';
 
 function DetailsBoxRoot(props: PropsWithChildren) {
     return (
-        <main className="flex flex-1 justify-center items-start px-4 pb-4">
-            <Box.Root className="w-full md:max-w-2/3 min-h-full md:min-h-2/3 gap-8">
+        <main className="flex flex-1 items-start justify-center px-4 pb-4">
+            <Box.Root className="min-h-full w-full gap-8 md:min-h-2/3 md:max-w-2/3">
                 {props.children}
             </Box.Root>
         </main>
@@ -26,18 +26,14 @@ function DetailsBoxHeader(props: PropsWithChildren) {
 
 function DetailsBoxContent(props: PropsWithChildren) {
     return (
-        <Box.Content className="flex-col md:flex-row md:justify-between w-full gap-12 lg:gap-24">
+        <Box.Content className="w-full flex-col gap-12 md:flex-row md:justify-between lg:gap-24">
             {props.children}
         </Box.Content>
     );
 }
 
 function DetailsBoxAside(props: PropsWithChildren) {
-    return (
-        <div className="flex flex-col gap-1 flex-1">
-            {props.children}
-        </div>
-    );
+    return <div className="flex flex-1 flex-col gap-1">{props.children}</div>;
 }
 
 function DetailsBoxAsideHeader(props: PropsWithChildren) {
@@ -60,11 +56,7 @@ function DetailsBoxAsideContent(props: PropsWithChildren) {
 }
 
 function DetailsBoxFooter(props: PropsWithChildren) {
-    return (
-        <Box.Footer className="flex flex-1 w-full">
-            {props.children}
-        </Box.Footer>
-    );
+    return <Box.Footer className="flex w-full flex-1">{props.children}</Box.Footer>;
 }
 
 export const DetailsBox = {
