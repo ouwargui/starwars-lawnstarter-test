@@ -55,6 +55,8 @@ COPY --from=vendor /app/vendor /var/www/html/vendor
 COPY --from=assets /app/public/build /var/www/html/public/build
 COPY . /var/www/html
 
+RUN chown -R www-data:www-data /var/www/html/public
+
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
